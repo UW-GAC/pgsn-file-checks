@@ -1,0 +1,96 @@
+name: test
+id: test
+imports:
+- linkml:types
+prefixes:
+  PGSN: https://w3id.org/linkml/examples/test/
+  linkml: https://w3id.org/linkml/
+default_prefix: test
+default_range: string
+enums:
+  consent:
+    permissible_values:
+      GRU:
+        description: general research use
+      HMB:
+        description: health/medical/biomedical
+  sex:
+    permissible_values:
+      Male: {}
+      Female: {}
+      Unknown: {}
+  biosample_type:
+    permissible_values:
+      Blood: {}
+      Saliva: {}
+classes:
+  Donor:
+    attributes:
+      donor_id:
+        description: A unique identifier for the donor.
+        identifier: true
+        range: string
+        required: true
+        multivalued: false
+      consent:
+        description: Consent group pertaining to this participant's data
+        range: consent
+        required: true
+        multivalued: false
+      sex:
+        description: Biological sex assigned at birth.
+        range: sex
+        required: true
+        multivalued: false
+      population_descriptor:
+        description: a concept or classification scheme that categorizes people into
+          groups (or "populations") according to a perceived characteristic or dimension
+          of interest
+        range: string
+        required: false
+        multivalued: true
+      population_label:
+        description: name given to a population that describes or classifies it according
+          to the dimension along which it was identified
+        range: string
+        required: false
+        multivalued: true
+  BioSample:
+    attributes:
+      biosample_id:
+        description: A unique identifier for the biosample.
+        identifier: true
+        range: string
+        required: true
+        multivalued: false
+      donor_id:
+        range: Donor
+        required: true
+        multivalued: false
+      biosample_type:
+        description: The type of biosample (e.g., blood, saliva)
+        range: biosample_type
+        required: true
+        multivalued: false
+      donor_age_at_collection:
+        range: float
+        required: false
+        multivalued: false
+
+  Container:
+    tree_root: true
+    slots:
+      - Donors
+      - BioSamples
+
+slots:
+  Donors:
+    range: Donor
+    inlined: true
+    inlined_as_list: true
+    multivalued: true
+  BioSamples:
+    range: BioSample
+    inlined: true
+    inlined_as_list: true
+    multivalued: true
